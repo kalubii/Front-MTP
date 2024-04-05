@@ -4,6 +4,7 @@ import cors from 'cors';
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 
 const db = mysql2.createConnection({
@@ -163,3 +164,21 @@ app.get('/projet/:annee/:searchAxe/:pkDebut/:pkFin', (req, res) =>{
 app.listen(8081, ()=>{
     console.log('Serveur démarrer avec succès...')
 })
+
+//INSERET PROJET
+app.post('/projet2024', (req, res) => {
+    let { faritany, region, commune, axe, section, titre, programmelf, conventionlf, conventionliblf, activite, cout, naturesurface, longueur, pk_debut, pk_fin, loc_debut, loc_Fin, annee, avancement, observation } = req.body;
+
+    db.query(
+        "INSERT INTO projet2024 (faritany, region, commune, axe, section, titre, programmelf, conventionlf, conventionliblf, activite, cout, naturesurface, longueur, pk_debut, pk_fin, loc_debut, loc_fin, annee, avancement, observation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [faritany, region, commune, axe, section, titre, programmelf, conventionlf, conventionliblf, activite, cout, naturesurface, longueur, pk_debut, pk_fin, loc_debut, loc_Fin, annee, avancement, observation],
+        (err, resultat) => {
+            if (err) {
+                console.error("Erreur lors de l'insertion :", err);
+                return res.status(500).json({ Message: "Erreur de serveur" });
+            }
+            console.log("Élément inséré avec succès !");
+            return res.status(200).json({ Message: "Élément inséré avec succès" });
+        }
+    );
+});
